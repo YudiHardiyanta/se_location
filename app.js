@@ -21,6 +21,7 @@ app.register(rateLimit, {
 
 app.register(require("./routes/locations"));
 app.register(require("./routes/regions"));
+app.register(require("./routes/maps"));
 
 const start = async () => {
     try {
