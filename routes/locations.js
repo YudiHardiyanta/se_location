@@ -18,7 +18,7 @@ module.exports = async function (fastify) {
             query: `
                 SELECT id, codeIdentity, data1, data3, level_6_fullcode, latitude, longitude
                 FROM assignments_se
-                WHERE latitude is not null and longitude is not null and level_6_fullcode LIKE '${region}%'
+                WHERE latitude is not null and longitude is not null and assignmentStatusId != '0' and level_6_fullcode LIKE '${region}%'
             `,
             format: "JSONEachRow"
         });
