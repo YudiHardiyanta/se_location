@@ -15,7 +15,7 @@ app.register(require("./plugins/clickhouse"));
 
 // Apply rate limiting
 app.register(rateLimit, {
-    max: 100,
+    max: 10000,
     timeWindow: 5 * 60 * 1000 // 1 menit
 });
 
