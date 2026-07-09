@@ -18,14 +18,25 @@ module.exports = async function (fastify) {
             query: `
                 SELECT id, codeIdentity, data1, data3, level_6_fullcode, latitude, longitude
                 FROM assignments_se
-                WHERE latitude is not null and longitude is not null and assignmentStatusId != '0' and level_6_fullcode LIKE '${region}%'
+                WHERE latitude is not null and longitude is not null and assignmentStatusId != '0' and match(data3, '^[0-9]') and level_6_fullcode LIKE '${region}%'
             `,
             format: "JSONEachRow"
         });
 
-        return await result.json();
+        const data = await result.json();
+        //res.json(await rows.json());
+        //lakukan mapping kolom
+        const renamed = data.map(row => ({
+            id: row.id,
+            codeIdentity: row.codeIdentity,
+            nama: row.data1,
+            no_bangunan: row.data3,
+            kodeWilayah: row.level_6_fullcode,
+            lat: row.latitude,
+            long: row.longitude
+        }))
 
-
+        return renamed;
 
     });
 };
