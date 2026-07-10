@@ -8,6 +8,17 @@ module.exports = async function (fastify) {
             return reply.status(400).send({ error: "Region is required" });
         }
 
+        const maskPerKata = function (nama) {
+            if (!nama) return nama;
+            return nama
+                .split(" ") // pisah per kata
+                .map(kata => {
+                    if (kata.length <= 2) return kata; // kata pendek biarkan
+                    return kata[0] + '*'.repeat(kata.length - 2) + kata[kata.length - 1];
+                })
+                .join(" "); // gabungkan kembali
+        }
+
         const { region } = request.params;
 
         if (region.length < 14) {
@@ -29,7 +40,7 @@ module.exports = async function (fastify) {
         const renamed = data.map(row => ({
             id: row.id,
             codeIdentity: row.codeIdentity,
-            nama: row.data1,
+            nama: maskPerKata(row.data1),
             no_bangunan: row.data3,
             kodeWilayah: row.level_6_fullcode,
             lat: row.latitude,
