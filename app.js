@@ -9,7 +9,7 @@ const app = Fastify({
     logger: true
 });
 
-await app.register(cors, {
+app.register(cors, {
   origin: '*'
 })
 
