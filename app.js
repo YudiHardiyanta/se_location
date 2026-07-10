@@ -3,9 +3,15 @@ require("dotenv").config();
 const Fastify = require("fastify");
 const rateLimit = require('@fastify/rate-limit');
 
+const cors = require('@fastify/cors');
+
 const app = Fastify({
     logger: true
 });
+
+await app.register(cors, {
+  origin: '*'
+})
 
 app.register(require("./plugins/auth"));
 app.register(require("./plugins/clickhouse"));
