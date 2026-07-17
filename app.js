@@ -20,10 +20,6 @@ app.register(require("./plugins/clickhouse"));
 
 
 // Apply rate limiting
-app.register(rateLimit, {
-    max: 10000,
-    timeWindow: 5 * 60 * 1000 // 1 menit
-});
 
 app.register(require("./routes/locations"));
 app.register(require("./routes/regions"));
