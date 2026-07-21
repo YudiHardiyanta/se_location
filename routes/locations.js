@@ -41,7 +41,7 @@ module.exports = async function (fastify) {
             id: row.id,
             codeIdentity: row.codeIdentity,
             nama: maskPerKata(row.data1),
-            alamat: maskPerKata(row.data2),
+            alamat: row.data2,
             no_bangunan: row.data3,
             kodeWilayah: row.level_6_fullcode,
             lat: row.latitude,
