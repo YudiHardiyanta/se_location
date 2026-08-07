@@ -27,7 +27,7 @@ module.exports = async function (fastify) {
 
         const result = await fastify.clickhouse.query({
             query: `
-                SELECT id, codeIdentity, data1,data2, data3, level_6_fullcode, latitude, longitude
+                SELECT id, codeIdentity, data1,data2, data3, level_6_fullcode, latitude, longitude, assignmentStatusAlias
                 FROM assignments_se
                 WHERE latitude is not null and longitude is not null and assignmentStatusId != '0' and match(data3, '^[0-9]') and level_6_fullcode LIKE '${region}%'
             `,
@@ -45,7 +45,8 @@ module.exports = async function (fastify) {
             no_bangunan: row.data3,
             kodeWilayah: row.level_6_fullcode,
             lat: row.latitude,
-            long: row.longitude
+            long: row.longitude,
+            status: row.assignmentStatusAlias
         }))
 
         return renamed;
