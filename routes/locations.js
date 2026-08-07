@@ -29,7 +29,7 @@ module.exports = async function (fastify) {
             query: `
                 SELECT id, codeIdentity, data1,data2, data3, level_6_fullcode, latitude, longitude, assignmentStatusAlias
                 FROM assignments_se
-                WHERE latitude is not null and longitude is not null and assignmentStatusId != '0' and match(data3, '^[0-9]') and level_6_fullcode LIKE '${region}%'
+                WHERE latitude is not null and longitude is not null and assignmentStatusAlias not like '%OPEN%' and match(data3, '^[0-9]') and level_6_fullcode LIKE '${region}%'
             `,
             format: "JSONEachRow"
         });
@@ -39,7 +39,7 @@ module.exports = async function (fastify) {
         //lakukan mapping kolom
         const renamed = data.map(row => ({
             id: row.id,
-            codeIdentity: row.codeIdentity,
+            //codeIdentity: row.codeIdentity,
             nama: maskPerKata(row.data1),
             alamat: row.data2,
             no_bangunan: row.data3,
