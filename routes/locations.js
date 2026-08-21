@@ -8,8 +8,10 @@ module.exports = async function (fastify) {
             return reply.status(400).send({ error: "Region is required" });
         }
 
-        const maskPerKata = function (nama) {
+        const maskPerKata = function (nama,jenis) {
+            
             if (!nama) return nama;
+            if (jenis!='keluarga') return nama;
             return nama
                 .split(" ") // pisah per kata
                 .map(kata => {
@@ -27,7 +29,7 @@ module.exports = async function (fastify) {
 
         const result = await fastify.clickhouse.query({
             query: `
-                SELECT id, codeIdentity, data1,data2, data3, level_6_fullcode, latitude, longitude, assignmentStatusAlias
+                SELECT id, codeIdentity, data1,data2, data3,data6, level_6_fullcode, latitude, longitude, assignmentStatusAlias
                 FROM assignments_se
                 WHERE latitude is not null and longitude is not null and assignmentStatusAlias not like '%OPEN%' and match(data3, '^[0-9]') and level_6_fullcode LIKE '${region}%'
             `,
@@ -40,9 +42,10 @@ module.exports = async function (fastify) {
         const renamed = data.map(row => ({
             id: row.id,
             //codeIdentity: row.codeIdentity,
-            nama: maskPerKata(row.data1),
+            nama: maskPerKata(row.data1,row.data6),
             alamat: row.data2,
             no_bangunan: row.data3,
+            jenis: row.data6,
             kodeWilayah: row.level_6_fullcode,
             lat: row.latitude,
             long: row.longitude,
