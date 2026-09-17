@@ -8,10 +8,11 @@ module.exports = async function (fastify) {
             return reply.status(400).send({ error: "Region is required" });
         }
 
-        const maskPerKata = function (nama,jenis) {
-            
+        const maskPerKata = function (nama, jenis) {
+
             if (!nama) return nama;
-            if (jenis!='keluarga') return nama;
+            //if (jenis != 'keluarga') return nama;
+            if (!jenis || !jenis.toUpperCase().includes('KELUARGA')) return nama; 
             return nama
                 .split(" ") // pisah per kata
                 .map(kata => {
@@ -65,7 +66,7 @@ WHERE
         const renamed = data.map(row => ({
             id: row.id,
             //codeIdentity: row.codeIdentity,
-            nama: maskPerKata(row.data1,row.data6),
+            nama: maskPerKata(row.data1, row.data6),
             alamat: row.data2,
             no_bangunan: row.data3,
             jenis: row.data6,
