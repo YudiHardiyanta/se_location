@@ -29,9 +29,32 @@ module.exports = async function (fastify) {
 
         const result = await fastify.clickhouse.query({
             query: `
-                SELECT id, codeIdentity, data1,data2, data3,data6, level_6_fullcode, latitude, longitude, assignmentStatusAlias
-                FROM assignments_se
-                WHERE latitude is not null and longitude is not null and assignmentStatusAlias not like '%OPEN%' and match(data3, '^[0-9]') and level_6_fullcode LIKE '${region}%'
+                SELECT 
+    id, 
+    codeIdentity, 
+    data1,
+    data2, 
+    data3,
+    data6, 
+    level_6_fullcode, 
+    latitude, 
+    longitude, 
+    assignmentStatusAlias
+FROM assignments_se
+WHERE 
+    level_6_fullcode LIKE '${region}%' and
+    latitude IS NOT NULL 
+    AND longitude IS NOT NULL 
+    AND assignmentStatusAlias NOT LIKE '%OPEN%'
+    AND (
+        -- data3 berupa angka tunggal < 5000
+        toUInt64OrNull(trim(data3)) < 5000
+
+        OR
+
+        -- data3 berupa format angka/angka
+        match(trim(data3), '^[0-9]+[[:space:]]*/[[:space:]]*[0-9]+$')
+    )
             `,
             format: "JSONEachRow"
         });
